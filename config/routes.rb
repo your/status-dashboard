@@ -10,5 +10,12 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "dashboard#index"
+
+  get "/(:scope)",
+    to: "dashboard#index",
+    as: "dashboard",
+    constraints: ->(r) { %w[internal external].include?(r.params[:scope]) }
+
+  match "*path", to: "application#not_found", via: :all unless Rails.env.development?
 end

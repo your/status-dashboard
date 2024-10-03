@@ -1,7 +1,7 @@
 doctype html
 html lang="en" class="govuk-template govuk-template--white"
   head
-    title = content_for(:title) || "Status Dashboard"
+    title = t('shared.service_name')
     = tag.meta name: "viewport", content: "width=device-width,initial-scale=1"
     = tag.meta name: "apple-mobile-web-app-capable", content: "yes"
     = favicon_link_tag 'images/favicon.ico'
@@ -11,10 +11,9 @@ html lang="en" class="govuk-template govuk-template--white"
     = csp_meta_tag
 
     = stylesheet_link_tag "application"
-    = link_to 'manifest.json', rel: 'manifest'
-    = link_to image_tag('icon.png'), rel: 'icon', type: 'image/png'
-    = link_to image_tag('icon.png'), rel: 'apple-touch-icon'
     = javascript_include_tag "application"
 
-  body
+  body.govuk-template__body class="govuk-frontend-supported"
+    javascript:
+      document.body.className = ((document.body.className) ? document.body.className + " js-enabled" : "js-enabled");
     = yield
