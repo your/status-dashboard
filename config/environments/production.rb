@@ -30,6 +30,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
+  # Mount Action Cable outside main process or domain.
+  config.action_cable.mount_path = "/ws"
+  # config.action_cable.url = 'ws://localhost:28080'
+  # config.action_cable.allowed_request_origins = [%r{^http://localhost$}]
+
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   # config.assume_ssl = true
