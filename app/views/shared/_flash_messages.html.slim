@@ -1,0 +1,4 @@
+div[class="govuk-!-static-padding-top-3"]
+- flash.each do |type, msg|
+    - unless type.to_s == 'timedout'
+      = govuk_warning_text(text: msg)

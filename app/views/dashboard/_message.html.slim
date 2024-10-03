@@ -1,0 +1,9 @@
+div id="message"
+  - if message&.body.blank?
+    .govuk-inset-text[class="govuk-!-static-padding-bottom-1 govuk-!-static-padding-top-1 govuk-!-static-margin-bottom-1 govuk-!-static-margin-top-1"]
+      p.govuk-body Good service on all systems
+  - else
+    - lines = message.body.split("\n").reject(&:blank?)
+    - for line in lines
+      .govuk-inset-text[class="govuk-!-static-padding-bottom-1 govuk-!-static-padding-top-1 govuk-!-static-margin-bottom-1 govuk-!-static-margin-top-1"]
+        p.govuk-body #{line}

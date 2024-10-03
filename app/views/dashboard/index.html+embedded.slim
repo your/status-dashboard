@@ -1,0 +1,21 @@
+- if params[:scope] == 'internal'
+  = javascript_include_tag 'refresh-on-update'
+
+.govuk-main-wrapper.govuk-main-wrapper--l
+
+  h1.govuk-heading-m
+    | Service Status
+
+  .govuk-grid-row
+    .govuk-grid-column-one-third
+
+      = turbo_stream_from 'message-external'
+
+      = render partial: 'dashboard/message', locals: { message: @summary.message }
+
+  .govuk-grid-row
+    .govuk-grid-column-one-third
+
+      = turbo_stream_from "last_update-#{params[:scope]||'external'}"
+
+      = render partial: 'dashboard/last_update', locals: { last_update: @summary.last_update }

@@ -12,6 +12,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_session_scope
-    session[:scope] ||= 'external'
+    session[:scope] ||= "external"
   end
 end
