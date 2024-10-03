@@ -1,0 +1,59 @@
+$govuk-new-link-styles: true;
+$govuk-assets-path: "/";
+
+@import "govuk-frontend/dist/govuk/all";
+
+.status {
+  color: #fff;
+  padding: 1ch;
+}
+
+.status--good-service {
+  background-color: govuk-colour("green");
+}
+
+.status--minor-issues {
+  background-color: #cb4e0f;
+}
+
+.status--severe-issues {
+  background-color: govuk-colour("red")
+}
+
+.status--scheduled-outage {
+  background-color: govuk-colour("blue");
+}
+
+.status--hidden {
+  background-color: #747779;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.govuk-template--white {
+  background-color: #fff;
+}
+
+.govuk-header__custom-tag {
+  vertical-align: middle;
+  padding-bottom: 9px;
+}
+
+.govuk-tag-custom {
+  padding: 1px 5px 0;
+  margin-left: 3px;
+  vertical-align: middle;
+  @include govuk-font($size: 14, $weight: "bold");
+}
+
+.govuk-tag-custom--external {
+  background-color: govuk-colour("red", $legacy: "bright-red");
+}
+
+.govuk-tag-custom--internal {
+  background-color: govuk-colour("yellow");
+  color: govuk-colour("black");
+}
