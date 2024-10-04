@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-development
+  namespace: status-dashboard-development
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: ingress-development-status-dashboard-development-green
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location = /metrics {
+        deny all;
+      }
+spec:
+  tls:
+  - hosts:
+    - CHANGEME
+  rules:
+  - host: CHANGEME
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: service-development
+            port:
+              number: 4000
