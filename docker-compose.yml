@@ -1,0 +1,47 @@
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:dummy@db:5432/
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY_BASE=`rake secret`
+    command: >
+      sh -c "bundle exec rake db:setup && bundle exec rails server -b 0.0.0.0"
+    depends_on:
+      - db
+      - redis
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RAILS_ENV=test
+      - DATABASE_URL=postgres://postgres:dummy@db:5432/
+    command: >
+      sh -c "bundle exec rake db:create db:schema:load && bundle exec rspec"
+    depends_on:
+      - db
+
+  redis:
+    image: redis
+    volumes:
+      - redis-data:/data
+
+  db:
+    image: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: dummy
+
+volumes:
+  redis-data:
+  postgres-data:

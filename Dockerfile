@@ -1,65 +1,52 @@
-# syntax = docker/dockerfile:1
+FROM ruby:3.3.5-alpine
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t my-app .
-# docker run -d -p 80:80 -p 443:443 --name my-app -e RAILS_MASTER_KEY=<value from config/master.key> my-app
+ARG ENV=development
+ARG RAILS_ENV=development
+ARG PORT=3000
+ARG RAILS_SERVE_STATIC_FILES=true
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
-ARG RUBY_VERSION=3.3.5
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+RUN apk --no-cache add --update --virtual build-deps \
+  build-base postgresql-dev libxml2-dev nodejs yarn \
+  && apk --no-cache add \
+    bash \
+    gcompat \
+    tzdata \
+    linux-headers \
+    postgresql-client \
+    linux-headers
 
-# Rails app lives here
-WORKDIR /rails
+RUN addgroup -g 1000 -S appgroup \
+  && adduser -u 1000 -S appuser -G appgroup
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 postgresql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN mkdir -p /app
+WORKDIR /app
 
-# Set production environment
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+RUN mkdir -p log tmp/pids app/assets/builds/fonts
 
-# Throw-away build stage to reduce size of final image
-FROM base AS build
+COPY Gemfile* ./
+COPY .ruby-version ./
 
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libpq-dev pkg-config && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN gem update --system && gem install bundler
+RUN if [ "$ENV" = "production" ]; then bundle config --local without 'test development' ; else : ; fi
+RUN bundle install --jobs 15 --retry 5
 
-# Install application gems
-COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
+COPY package.json yarn.lock ./
+RUN if [ "$ENV" = "production" ]; then yarn --prod ; else yarn ; fi
 
-# Copy application code
+ENV RAILS_ENV $RAILS_ENV
+ENV NODE_ENV $ENV
+ENV RAILS_SERVE_STATIC_FILES $RAILS_SERVE_STATIC_FILES
+
 COPY . .
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+RUN if [ "$ENV" = "production" ]; then : ; else echo -e "User-agent: *\nDisallow: /" > public/robots.txt ; fi
 
+RUN SECRET_KEY_BASE=`bundle exec rake secret` bundle exec rake assets:precompile
+RUN apk del build-deps
 
+RUN chown -R appuser:appgroup log tmp db
 
+USER 1000
 
-# Final stage for app image
-FROM base
-
-# Copy built artifacts: gems, application
-COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
-COPY --from=build /rails /rails
-
-# Run and own only the runtime files as a non-root user for security
-RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    chown -R rails:rails db log tmp
-USER 1000:1000
-
-# Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
-
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD ["./bin/rails", "server"]
+EXPOSE $PORT
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
