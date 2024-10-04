@@ -1,0 +1,15 @@
+div id="services"
+  = govuk_table do |table|
+    - table.with_head do |head|
+      - head.with_row do |row|
+        - row.with_cell(header: true, text: '')
+        - row.with_cell(header: true, text: '')
+    ruby:
+      table.with_body do |body|
+        services.each do |s|
+          body.with_row do |row|
+            row.with_cell(text: s.name)
+            row.with_cell(text: s.status, classes: ['status', "status--#{s.status.underscore.parameterize(separator: '-')}"])
+          end
+        end
+      end

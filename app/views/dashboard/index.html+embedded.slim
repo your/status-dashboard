@@ -16,6 +16,13 @@
   .govuk-grid-row
     .govuk-grid-column-one-third
 
+      = turbo_stream_from 'services-external'
+
+      = render partial: 'dashboard/services', locals: { services: @summary.services }
+
+  .govuk-grid-row
+    .govuk-grid-column-one-third
+
       = turbo_stream_from "last_update-#{params[:scope]||'external'}"
 
       = render partial: 'dashboard/last_update', locals: { last_update: @summary.last_update }
