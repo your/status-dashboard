@@ -1,55 +1,57 @@
-name: CI
+name: Run Tests
 
-on:
-  pull_request:
-  push:
-    branches: [ main ]
+on: [push]
 
 jobs:
-  scan_ruby:
+  build-and-run-tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/service_status_dashboard_app_test
+      REDIS_URL: redis://redis:6379/0
+      GOVUK_NOTIFY_API_KEY: foobar
+      DOMAIN_URL: http://localhost:3000
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+      - name: Install dependencies
+        run: bundle install --quiet --retry=5
 
-  scan_js:
-    runs-on: ubuntu-latest
+      - name: Run database migrations
+        run: bundle exec rake db:setup
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Run static analysis
+        run: bundle exec rubocop
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
+      - name: Run unit tests
+        run: bundle exec rspec
