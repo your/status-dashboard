@@ -15,6 +15,13 @@
         = render partial: 'dashboard/message', locals: { message: @summary.message }
 
     .govuk-grid-row
+      .govuk-grid-column-two-thirds
+
+        = turbo_stream_from 'services-external'
+
+        = render partial: 'dashboard/services', locals: { services: @summary.services }
+
+    .govuk-grid-row
       .govuk-grid-column-one-third
         = turbo_stream_from "last_update-#{params[:scope]||'external'}"
 

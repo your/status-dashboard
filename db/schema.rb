@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2022_12_09_154331) do
+ActiveRecord::Schema[7.2].define(version: 2022_12_09_172013) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,5 +20,18 @@ ActiveRecord::Schema[7.2].define(version: 2022_12_09_154331) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["scope", "created_at"], name: "index_messages_on_scope_and_created_at", unique: true
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "scope", null: false
+    t.string "name", null: false
+    t.string "status", null: false
+    t.boolean "hidden", null: false
+    t.boolean "destroyable", default: true, null: false
+    t.boolean "mirrorable", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scope", "name"], name: "index_services_on_scope_and_name", unique: true
+    t.index ["scope"], name: "index_services_on_scope", where: "(hidden = false)"
   end
 end
