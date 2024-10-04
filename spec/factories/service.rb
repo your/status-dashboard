@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :service do
+    updated_by factory: :user
+
     scope { "external" }
     sequence(:name) { |n| "Test service #{n}" }
     status { "Good Service" }

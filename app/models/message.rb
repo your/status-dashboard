@@ -4,6 +4,8 @@ class Message < ApplicationRecord
   include HasScope
   include HasScopedLastUpdate
 
+  belongs_to :updated_by, class_name: :User
+
   before_update :must_prevent_update?
   before_destroy :must_prevent_destroy?
 
