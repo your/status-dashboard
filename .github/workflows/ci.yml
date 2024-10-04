@@ -50,6 +50,9 @@ jobs:
       - name: Run database migrations
         run: bundle exec rake db:setup
 
+      - name: Install yarn dependencies
+        run: yarn install && yarn build && yarn build:css
+
       - name: Run static analysis
         run: bundle exec rubocop
 
