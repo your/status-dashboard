@@ -1,0 +1,53 @@
+= render 'shared/header_admin'
+
+.govuk-width-container
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-full
+        = render 'shared/flash_messages'
+
+    .govuk-grid-row
+      .govuk-grid-column-full
+
+        h1.govuk-heading-l
+          | User profile
+
+        = govuk_summary_list(actions: false) do |summary_list|
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'Full Name')
+            - row.with_value(text: @user.name)
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'E-mail')
+            - row.with_value(text: @user.email)
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'Role')
+            - row.with_value(text: @user.admin? ? 'Admin' : 'Support')
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'Created at')
+            - row.with_value(text: @user.created_at)
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'Updated at')
+            - row.with_value(text: @user.updated_at)
+          - summary_list.with_row do |row|
+            - row.with_key(text: 'Last access')
+            - row.with_value(text: @user.last_sign_in_at ? "#{@user.last_sign_in_at||'N/A'} (#{time_ago_in_words(@user.last_sign_in_at)} ago) from #{@user.last_sign_in_ip||'N/A'}" : 'None')
+          - if current_user.admin?
+            - summary_list.with_row do |row|
+              - row.with_key(text: 'Confirmed')
+              - row.with_value(text: @user.confirmed_at ? "Yes, since #{@user.confirmed_at}" : 'No')
+            - summary_list.with_row do |row|
+              - row.with_key(text: 'Locked')
+              - row.with_value(text: @user.locked_at ? "Yes, since #{@user.locked_at}" : 'No')
+            - summary_list.with_row do |row|
+              - row.with_key(text: 'Failed sign in attempts')
+              - row.with_value(text: @user.failed_attempts)
+
+        .govuk-button-group
+          = govuk_button_link_to 'Edit', edit_user_path(id: @user.id)
+          = govuk_button_link_to 'Cancel', users_path, secondary: true
+
+    .govuk-grid-row
+      .govuk-grid-column-full
+        = govuk_back_to_top_link("#top")
+
+= govuk_footer

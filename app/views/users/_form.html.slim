@@ -1,0 +1,43 @@
+= form_for @user, data: { turbo: false } do |f|
+  = f.govuk_error_summary
+
+  = f.govuk_text_field :name,
+    width: 20,
+    autocomplete: 'off',
+    label: { text: 'Full Name', size: 'm' },
+    maxlength: 50
+
+  = f.govuk_text_field :email,
+    width: 20,
+    autocomplete: 'off',
+    label: { text: 'E-mail', size: 'm' },
+    maxlength: 85,
+    class: action == 'Update' ? 'disabled' : ''
+
+  - if action == 'Update'
+    = f.govuk_password_field :password,
+      width: 20,
+      autocomplete: 'new-password',
+      label: { text: 'New password',  size: 'm' },
+      maxlength: 70,
+      hint: { text: 'Leave blank if you do not wish to do a password reset. If you change the password, the user session will be expired immediately.' }
+
+    = f.govuk_password_field :password_confirmation,
+      width: 20,
+      autocomplete: 'new-password',
+      maxlength: 70,
+      label: { text: 'Confirm new password' }
+
+  - show_options = [[false, 'No'], [true, 'Yes']]
+  = f.govuk_collection_radio_buttons :admin,
+    show_options,
+    :first,
+    :last,
+    inline: true,
+    classes: ((action == 'Update' && current_user.admin? && current_user.id.to_s != params[:id]) || (action == 'Add' && current_user.admin?)) ? nil : 'disabled',
+    hint: { text: 'While any user can update the dashboard, the admin role is required to create and remove users. Assign sparingly.' },
+    legend: { text: 'Make this user an admin?', size: 'm' }
+
+  .govuk-button-group
+    = f.govuk_submit "#{action} user", warning: false
+    = govuk_button_link_to 'Cancel', users_path, secondary: true

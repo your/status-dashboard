@@ -28,6 +28,15 @@ Rails.application.routes.draw do
       unlock: "unlock"
     }
 
+  get "admin", to: "admin#index"
+  scope "/admin" do
+    resources :users, only: %i[index show new create edit update destroy] do
+      member do
+        get "delete"
+      end
+    end
+  end
+
   get "/(:scope)",
     to: "dashboard#index",
     as: "dashboard",
