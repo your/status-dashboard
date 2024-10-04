@@ -7,16 +7,17 @@ RSpec.describe Devise::Mailer do
 
   let(:user) { build(:user) }
   let(:token) { "dummy" }
+  let(:url) { ENV.fetch("DOMAIN_URL", "http://localhost") }
 
   let(:expected_personalisation) do
     {
       confirmation_instructions: {
-        confirmation_url: "http://localhost/admin/confirmation?confirmation_token=#{token}",
+        confirmation_url: "#{url}/admin/confirmation?confirmation_token=#{token}",
         token_expiry_period: "7 days",
         user_name: user.name
       },
       reset_password_instructions: {
-        edit_password_url: "http://localhost/admin/password-reset/edit?reset_password_token=#{token}",
+        edit_password_url: "#{url}/admin/password-reset/edit?reset_password_token=#{token}",
         token_expiry_period: "about 6 hours",
         user_email: user.email,
         user_name: user.name
@@ -26,7 +27,7 @@ RSpec.describe Devise::Mailer do
       },
       unlock_instructions: {
         user_name: user.name,
-        unlock_url: "http://localhost/admin/unlock?unlock_token=#{token}",
+        unlock_url: "#{url}/admin/unlock?unlock_token=#{token}",
         reset_password_url: "/admin/password-reset/new"
       }
     }

@@ -181,7 +181,7 @@ RSpec.describe "Services", type: :request do
         it { expect(response.body).to include("confirmation is required") }
 
         it "does not delete the service" do
-          expect(Service.last).to eq(service)
+          expect(Service.find_by(id: service.id)).not_to be_nil
         end
       end
 
@@ -198,7 +198,7 @@ RSpec.describe "Services", type: :request do
         end
 
         it "deletes the service" do
-          expect(Service.last).to eq(nil)
+          expect(Service.find_by(id: service.id)).to be_nil
         end
       end
     end
