@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  before_action :authenticate_user!
+  skip_before_action :authenticate_user!, only: :not_found
   before_action :set_session_scope
 
   def not_found

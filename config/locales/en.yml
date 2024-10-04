@@ -8,6 +8,13 @@ en:
     create:
       success: "Message updated."
       failure: "An error occurred while updating the status message: %{error}."
+  users:
+    create:
+      success: "User '%{email}' successfully created."
+      success: "User '%{email}' successfully updated."
+    destroy:
+      success: "User '%{email}' successfully deleted."
+      failure: "An error occurred while deleting '%{email}.'"
   activerecord:
     errors:
       models:
@@ -17,3 +24,12 @@ en:
               cannot_update: "cannot be updated, create a new record if necessary"
               cannot_delete: "cannot be deleted, create a new record if necessary"
               cannot_be_blank: "can be blank only if all systems are in 'Good Service'"
+        user:
+          attributes:
+            delete_confirmation:
+              cannot_delete: "this record cannot be deleted"
+            email:
+              invalid_domain: "must be a valid email address from changeme.com"
+            password:
+              cannot_assign_password: "cannot assign a password when creating a new user"
+              insufficient_complexity: "must include at least: 1 uppercase, 1 lowercase and 1 digit"

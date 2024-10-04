@@ -1,0 +1,14 @@
+= render 'shared/header_admin'
+
+.govuk-width-container
+  = govuk_back_link(href: users_path)
+
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        h1.govuk-heading-l
+          | Add new user
+        = render 'users/form', action: 'Add'
+        = govuk_back_to_top_link("#top")
+
+= govuk_footer

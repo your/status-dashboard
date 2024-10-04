@@ -1,0 +1,21 @@
+doctype html
+html lang="en" class="govuk-template"
+  head
+    title = t('shared.service_name')
+    = tag.meta name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover"
+    = tag.meta name: "robots", content: "noindex,nofollow"
+    = tag.meta name: "theme-color", content: "#0b0c0c"
+    = favicon_link_tag 'images/favicon.ico'
+
+    = action_cable_meta_tag
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = stylesheet_link_tag "application", data: { turbo_track: "reload" }
+    = javascript_include_tag "application", data: { turbo_track: "reload" }, defer: true
+    = javascript_include_tag "hide-warn-after-delay", data: { turbo_track: "reload" }, defer: true
+
+  body.govuk-template__body
+    javascript:
+      document.body.className = ((document.body.className) ? document.body.className + " js-enabled" : "js-enabled");
+    = yield
