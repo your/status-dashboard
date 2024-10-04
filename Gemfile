@@ -1,9 +1,12 @@
 source "https://rubygems.org"
 
 gem "cssbundling-rails"
+gem "devise", "~> 4.9.4"
+gem "devise-security", "~> 0.18.0"
 gem "jsbundling-rails"
 gem "govuk-components", "~> 5.6.1"
 gem "govuk_design_system_formbuilder", "~> 5.6.0"
+gem "paranoia", "~> 3.0"
 gem "pg", "~> 1.1"
 gem "propshaft"
 gem "puma", ">= 5.0"

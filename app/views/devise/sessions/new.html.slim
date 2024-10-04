@@ -1,0 +1,48 @@
+= render 'shared/header_public'
+
+.govuk-width-container
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        = render 'shared/flash_messages'
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        h1.govuk-heading-l
+          | Sign in
+
+        = form_for resource, as: resource_name, url: session_path(resource_name), data: { turbo: false } do |f|
+          = f.govuk_error_summary
+
+          = f.govuk_email_field :email,
+            label: { text: 'E-mail' },
+            autofocus: true,
+            required: true,
+            autocomplete: 'email',
+            class: 'govuk-input govuk-!-width-two-thirds'
+
+          = f.govuk_password_field :password,
+            label: { text: 'Password' },
+            required: true,
+            autocomplete: 'current-password',
+            class: 'govuk-input govuk-!-width-two-thirds'
+
+          - if devise_mapping.rememberable?
+            = f.govuk_check_box :remember_me,
+              1,
+              0,
+              multiple: false,
+              link_errors: true,
+              label: { text: 'Remember me' }
+
+          .govuk-button-group[class='govuk-!-static-padding-top-5']
+            = f.govuk_submit 'Sign in'
+
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        = govuk_link_to 'Forgot your password?', new_password_path(resource_name)
+
+    .govuk-grid-row[class='govuk-!-padding-top-5']
+      .govuk-grid-column-two-thirds
+        = govuk_back_to_top_link('#top')
+
+= govuk_footer

@@ -1,0 +1,37 @@
+= render 'shared/header_public'
+
+.govuk-width-container
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        = render 'shared/flash_messages'
+    .govuk-grid-row
+      .govuk-grid-column-two-thirds
+        h1.govuk-heading-l
+          | Change password
+
+        = form_for resource, as: resource_name, url: password_path(resource_name), data: { turbo: false }, html: { method: :put } do |f|
+          = f.govuk_error_summary
+          = f.hidden_field :reset_password_token
+
+          = f.govuk_password_field :password,
+            label: { text: 'New password' },
+            required: true,
+            autofocus: true,
+            autocomplete: 'new-password',
+            class: 'govuk-input govuk-!-width-two-thirds'
+
+          = f.govuk_password_field :password_confirmation,
+            label: { text: 'Confirm new password' },
+            required: true,
+            autocomplete: 'new-password',
+            class: 'govuk-input govuk-!-width-two-thirds'
+
+          .govuk-button-group[class='govuk-!-static-padding-top-5']
+            = f.govuk_submit 'Continue'
+
+    .govuk-grid-row[class='govuk-!-padding-top-5']
+      .govuk-grid-column-two-thirds
+        = govuk_back_to_top_link('#top')
+
+= govuk_footer

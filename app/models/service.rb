@@ -24,6 +24,8 @@ class Service < ApplicationRecord
   validates :status, inclusion: { in: ALL_STATUSES }
   validates :hidden, inclusion: { in: [ true, false ] }
 
+  belongs_to :updated_by, class_name: :User
+
   after_create_commit :broadcast_message
   after_save_commit :broadcast_last_update
 

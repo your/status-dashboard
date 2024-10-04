@@ -12,6 +12,22 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "dashboard#index"
 
+  devise_for :users,
+    controllers: {
+      confirmations: "users/confirmations",
+      passwords: "users/passwords",
+      unlocks: "users/unlocks",
+      sessions: "users/sessions"
+    },
+    path: "admin",
+    path_names: {
+      sign_in: "login",
+      sign_out: "logout",
+      confirmations: "confirmation",
+      password: "password-reset",
+      unlock: "unlock"
+    }
+
   get "/(:scope)",
     to: "dashboard#index",
     as: "dashboard",
