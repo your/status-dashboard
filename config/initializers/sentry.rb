@@ -8,7 +8,7 @@ Rails.application.config.to_prepare do
     filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
 
     config.before_send = lambda do |event, hint|
-      event.fingerprint = ['database-unavailable'] if hint[:exception].is_a?(ActiveRecord::ConnectionNotEstablished)
+      event.fingerprint = [ "database-unavailable" ] if hint[:exception].is_a?(ActiveRecord::ConnectionNotEstablished)
 
       filter.filter(event.to_hash)
     end
