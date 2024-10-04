@@ -1,0 +1,11 @@
+= govuk_header(service_name: t('shared.service_name')) do |header|
+  - header.with_product_name(classes: 'govuk-header__custom-tag') do
+      span.govuk-tag.govuk-tag-custom[class="govuk-tag-custom--#{session[:scope]}"]
+        | #{session[:scope]}
+  - header.with_navigation_item(text: 'Switch Dashboard', href: switch_dashboard_path)
+  - header.with_navigation_item(text: 'Live Dashboard', href: dashboard_path(session[:scope]), options: { target: '_blank' })
+  - header.with_navigation_item(text: 'Update status', href: admin_path, active: current_page?(admin_path))
+  - if current_user.admin?
+    - header.with_navigation_item(text: 'Users', href: users_path, active: current_page?(users_path))
+  - header.with_navigation_item(text: 'Profile', href: user_path(current_user), active: current_page?(user_path(current_user)))
+  - header.with_navigation_item(text: 'Logout', href: destroy_user_session_path, options: { data: { turbo_method: :delete } })

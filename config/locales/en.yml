@@ -8,9 +8,18 @@ en:
     create:
       success: "Message updated."
       failure: "An error occurred while updating the status message: %{error}."
+  services:
+    create:
+      success: "Service '%{name}' successfully created."
+    update:
+      success: "Service '%{name}' successfully updated."
+    destroy:
+      success: "Service '%{name}' successfully deleted."
+      failure: "An error occurred while deleting '%{name}.'"
   users:
     create:
       success: "User '%{email}' successfully created."
+    update:
       success: "User '%{email}' successfully updated."
     destroy:
       success: "User '%{email}' successfully deleted."
@@ -24,6 +33,12 @@ en:
               cannot_update: "cannot be updated, create a new record if necessary"
               cannot_delete: "cannot be deleted, create a new record if necessary"
               cannot_be_blank: "can be blank only if all systems are in 'Good Service'"
+        service:
+          attributes:
+            delete_confirmation:
+              cannot_delete: "this record cannot be deleted"
+            mirror_status_confirmation:
+              cannot_delete: "mirroring available only for: %{statuses}"
         user:
           attributes:
             delete_confirmation:

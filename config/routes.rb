@@ -30,6 +30,13 @@ Rails.application.routes.draw do
 
   get "admin", to: "admin#index"
   scope "/admin" do
+    get "switch-dashboard", to: "admin#switch_dashboard"
+    resource :messages, only: [ :create ]
+    resources :services, only: %i[index new create edit update destroy] do
+      member do
+        get "delete"
+      end
+    end
     resources :users, only: %i[index show new create edit update destroy] do
       member do
         get "delete"
