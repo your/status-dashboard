@@ -10,7 +10,7 @@ RSpec.describe Service, type: :model do
     it { is_expected.to validate_inclusion_of(:status).in_array(described_class::ALL_STATUSES) }
   end
 
-  describe "after_create_commit -> broadcast_message" do
+  describe "after_save_commit -> broadcast_service_update" do
     subject { build(:service, scope:) }
 
     before do
@@ -26,6 +26,8 @@ RSpec.describe Service, type: :model do
     %w[external internal].each do |scope|
       context "#{scope} scope" do
         let(:scope) { scope }
+
+        it { allow(described_class).to receive(:after_save_commit).with(:broadcast_service_update) }
 
         it "broadcasts the message to the 'services-#{scope}' stream" do
           is_expected.to have_received(:broadcast_replace_to).with(stream, expected_args).once

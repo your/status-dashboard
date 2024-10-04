@@ -40,7 +40,7 @@ class Service < ApplicationRecord
 
   belongs_to :updated_by, class_name: :User
 
-  after_create_commit :broadcast_message
+  after_save_commit :broadcast_service_update
   after_save_commit :broadcast_last_update
 
   def good_service?
@@ -68,7 +68,7 @@ class Service < ApplicationRecord
     errors.add(:delete_confirmation, :cannot_delete) unless destroyable?
   end
 
-  def broadcast_message
+  def broadcast_service_update
     broadcast_replace_to(
       "services-#{scope}",
       partial: "dashboard/services",

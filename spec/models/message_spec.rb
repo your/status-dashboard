@@ -52,6 +52,8 @@ RSpec.describe Message, type: :model do
       context "#{scope} scope" do
         let(:scope) { scope }
 
+        it { allow(described_class).to receive(:after_save_commit).with(:broadcast_message) }
+
         it "broadcasts the message to the 'message-#{scope}' stream" do
           is_expected.to have_received(:broadcast_replace_to).with(stream, expected_args).once
         end
