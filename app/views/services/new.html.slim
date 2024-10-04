@@ -1,0 +1,15 @@
+= render 'shared/header_admin'
+
+.govuk-width-container
+  = render 'shared/banner'
+  = govuk_back_link(href: admin_path)
+
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-full
+        h1.govuk-heading-l
+          | Add new service
+        = render 'services/form', action: 'Add'
+        = govuk_back_to_top_link("#top")
+
+= govuk_footer

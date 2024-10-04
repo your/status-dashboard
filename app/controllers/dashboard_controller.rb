@@ -3,6 +3,7 @@
 class DashboardController < ApplicationController
   include HasSummary
 
+  skip_before_action :authenticate_user!, only: :index
   skip_before_action :set_session_scope, only: :index
 
   before_action :determine_scope, only: :index

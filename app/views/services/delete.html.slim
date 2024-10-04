@@ -1,0 +1,37 @@
+= render 'shared/header_admin'
+
+.govuk-width-container
+  = render 'shared/banner'
+  = govuk_back_link(href: admin_path)
+
+  .govuk-main-wrapper
+    .govuk-grid-row
+      .govuk-grid-column-full
+        = form_for @service, url: service_path(@service), method: :delete, data: { turbo: false } do |f|
+          = f.govuk_error_summary
+          = f.govuk_check_boxes_fieldset :delete_confirmation,
+            multiple: false,
+            legend: { text: "Deleting: #{@service.name}", size: 'l' } do
+
+            p.govuk-body
+              | You are about to delete a service from the dashboard:
+
+            ul.govuk-list.govuk-list--bullet
+              li the record will be permanently destroyed
+              li the record will disappear from the dashboard
+              li you can create it again anytime
+
+            = f.govuk_check_box :delete_confirmation,
+              1,
+              0,
+              multiple: false,
+              link_errors: true,
+              label: { text: "I still want to delete this service" }
+
+          .govuk-button-group
+            = f.govuk_submit "Delete service", warning: true
+            = govuk_button_link_to 'Cancel', admin_path, secondary: true
+
+        = govuk_back_to_top_link("#top")
+
+= govuk_footer

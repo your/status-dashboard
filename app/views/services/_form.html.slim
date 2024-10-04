@@ -1,0 +1,46 @@
+= form_for @service, data: { turbo: false } do |f|
+  = f.govuk_error_summary
+
+  = f.govuk_text_field :name,
+    width: 20,
+    label: { text: 'Name', size: 'm' },
+    maxlength: 25
+
+  - status_options = Service::ALL_STATUSES.map { |s| [s] }
+  = f.govuk_collection_radio_buttons :status,
+    status_options,
+    :first,
+    :first,
+    legend: { text: 'Initial status', size: 'm' }
+
+  - show_options = [[false, 'Yes'], [true, 'No']]
+  = f.govuk_collection_radio_buttons :hidden,
+    show_options,
+    :first,
+    :last,
+    inline: true,
+    legend: { text: 'Show on the dashboard?', size: 'm' }
+
+  - if @service.mirrorable?
+    - show_options = [['0', 'No'], ['1', 'Yes']]
+    = f.govuk_collection_radio_buttons :mirror_status_confirmation,
+      show_options,
+      :first,
+      :last,
+      inline: true,
+      legend: { text: 'Mirror the status?', size: 'm' },
+      hint: { text: 'Important: this is a core service and its status can be mirrored across all the other services, which can useful in certain situations, e.g. scheduled outage or unplanned downtime preventing any access' }
+
+  = f.govuk_check_boxes_fieldset :message_update_confirmation,
+    multiple: false,
+    legend: { text: "Reminder: status message update", size: 'm' } do
+    = f.govuk_check_box :message_update_confirmation,
+      1,
+      0,
+      multiple: false,
+      link_errors: true,
+      label: { text: "I have updated or will update ASAP the status message according to the changes to this page (if relevant)" }
+
+  .govuk-button-group
+    = f.govuk_submit "#{action} service", warning: false
+    = govuk_button_link_to 'Cancel', admin_path, secondary: true
