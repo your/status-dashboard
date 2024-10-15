@@ -17,7 +17,7 @@ gem "redis", "~> 5.3"
 gem "sentry-rails"
 gem "sentry-ruby"
 gem "slim-rails"
-gem "turbo-rails", "~> 2.0.10"
+gem "turbo-rails", "~> 2.0.11"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 group :development, :test do
